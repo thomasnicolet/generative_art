@@ -1,0 +1,103 @@
+// GIF: Setup
+let gif;
+let canvas;
+let framesToSkip = 3;
+let makeGif = false;
+let isGifExported = false;
+
+function setupGif() {
+    recordedFrames = 0;
+
+    gif = new GIF({
+        workers: 2,
+        quality: 10,
+        workerScript: 'gif.worker.js'
+    });
+
+    const uuid = parseInt(Math.random()*10000000);
+    gif.on('finished', function(blob) {
+        print('GIT: finished')
+        rendering = false;
+        window.open(URL.createObjectURL(blob));
+        saveAs(blob, `bezier-${uuid}@2x.gif`);
+        setupGif();
+        recordedFrames = 0;
+    });
+}
+function mousePressed() {
+    makeGif=false;
+    console.log(`Gif will be made.`);
+  }
+
+function setup() {
+  canvas = createCanvas(333, 333);
+  setAttributes('antialias', true);
+  setupGif();
+}
+
+let t = 0;
+function draw() {
+	background(220);
+
+
+	for (var x = 0; x < width; x += 1) {
+		for (var y = 0; y < height; y += 1 ) {
+			
+			
+     //var n = noise(x, y);
+     var n = noise(x*0.015, y*0.015);
+     // Make random RGB color and fill with it
+      var r = noise(x*0.05-t,y*0.01+t)*175;
+      var g = noise(x*0.05-t,y*0.005+t)*155;
+      var b = noise(x*0.05-t,y*0.01+t)*0;
+      
+      
+      strokeWeight(1);
+      //fill(255*n);
+      stroke(0); 
+
+      // Make a point 
+      point(x + 30*n, y+ 30*n);
+
+      
+       // Border color
+      // Make a noise random colour
+
+      //fill(155*n);    // Fill of shapes
+      // Add noise to point
+      
+
+      // Make a grid of lines
+      //line(x, 0, x, height);
+      //line(0, y, width, y);
+    
+
+      //point(x, y);
+
+      // Make a line
+		}
+	}
+  t+=0.005;
+
+
+
+  // GIF: Add frame
+  if (makeGif &&
+    !isGifExported &&
+    ((frameCount - 1) % framesToSkip == 0 || frameCount == 1)
+   ) {
+  console.log(`Added frame.`)
+  gif.addFrame(canvas.elt, { delay: 30, copy: true });
+}
+
+// GIF: Render when done
+if (makeGif &&
+    !isGifExported &&
+    frameCount >= 500
+   ) {
+  print('Exporting GIF...');
+  gif.render();
+  isGifExported = true;
+}
+
+}

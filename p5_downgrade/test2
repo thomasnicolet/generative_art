@@ -1,0 +1,37 @@
+function setup() {
+	createCanvas(111, 111);
+}
+
+
+
+let t = 0;
+function draw() {
+	background(220);
+
+
+	for (var x = 0; x < width; x += 1) {
+		for (var y = 0; y < height; y += 1 ) {
+			
+			strokeWeight(1);
+
+      var n = noise(x*0.001+t, y+t);
+
+
+      // Make random RGB color and fill with it
+      var r = noise(x*0.05-t,y*0.01+t)*175;
+      var g = noise(x*0.05-t,y*0.005+t)*155;
+      var b = noise(x*0.05-t,y*0.01+t)*190;
+      fill(r,g,b);
+
+      // Make a noise random colour
+
+      //fill(155*n);    // Fill of shapes
+      stroke(r,g,b);  // Border color
+
+      //point(x, y);
+
+      rect(x,y,1,1);
+		}
+	}
+  t+=0.05;
+}
